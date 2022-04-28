@@ -46,7 +46,7 @@ L.control.scale({
     imperial: false,
 }).addTo(map);
 
-
+L.control.fullscreen().addTo(map);
 
 
 
