@@ -100,12 +100,12 @@ async function loadStops(url) {
             let popup = `
                 <strong>${geoJsonPoint.properties.LINE_NAME}</strong><br>
                 Station ${geoJsonPoint.properties.STAT_NAME}
-                
+
             `;
 
             return L.marker(latlng, {
                 icon: L.icon({
-                    iconUrl: "icons/photo.png",
+                    iconUrl: "icons/bus.png",
                     iconAnchor: [16,37],
                     popupAnchor: [0,-37]
                 })
