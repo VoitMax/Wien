@@ -94,9 +94,27 @@ async function loadStops(url) {
     let overlay = L.featureGroup();
     layerControl.addOverlay(overlay,"Haltestellen Vienna Sightseeing");
     overlay.addTo(map)
-    L.geoJSON(geojson).addTo(overlay);
+    L.geoJSON(geojson,{
+        pointToLayer: function(geoJsonPoint,latlng){
+            console.log(geoJsonPoint.properties.NAME);
+            let popup = `
+                <strong>${geoJsonPoint.properties.LINE_NAME}</strong><br>
+                Station ${geoJsonPoint.properties.STAT_NAME}
+                
+            `;
+
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: "icons/photo.png",
+                    iconAnchor: [16,37],
+                    popupAnchor: [0,-37]
+                })
+            }).bindPopup(popup); 
+        }
+
+    }).addTo(overlay);
 }
-//loadStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKHTSVSLOGD&srsName=EPSG:4326&outputFormat=json");
+loadStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKHTSVSLOGD&srsName=EPSG:4326&outputFormat=json");
 
 
 async function loadLines(url) {
