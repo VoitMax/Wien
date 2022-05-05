@@ -35,8 +35,6 @@ layerControl.expand();
 
 let sightLayer = L.featureGroup();
 
-layerControl.addOverlay(sightLayer, "Sehenswürdigkeiten");
-
 let mrk = L.marker([stephansdom.lat, stephansdom.lng]).addTo(sightLayer);
 
 sightLayer.addTo(map);
@@ -53,14 +51,15 @@ let miniMap = new L.Control.MiniMap(
     L.tileLayer.provider("BasemapAT")
 ).addTo(map);
 
-
+// Sehenswürdigkeiten 
 async function loadSights(url) {
     let response = await fetch(url);
     let geojson = await response.json(); 
     console.log(geojson);
-
-
-    L.geoJSON(geojson).addTo(map);
+    let overlay = L.featureGroup();
+    layerControl.addOverlay(overlay,"Sehenswürdigkeiten");
+    overlay.addTo(map)
+    L.geoJSON(geojson).addTo(overlay);
 
 
 }
