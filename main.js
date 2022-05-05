@@ -58,8 +58,14 @@ async function loadSights(url) {
     console.log(geojson);
     let overlay = L.featureGroup();
     layerControl.addOverlay(overlay,"Sehenswürdigkeiten");
-    overlay.addTo(map)
-    L.geoJSON(geojson).addTo(overlay);
+    overlay.addTo(map);
+
+    L.geoJSON(geojson,{
+        pointToLayer: function(geoJsonPoint,latlng){
+            return L.marker(latlng); 
+        }
+
+    }).addTo(overlay);
 }
 loadSights("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SEHENSWUERDIGOGD&srsName=EPSG:4326&outputFormat=json");
 
