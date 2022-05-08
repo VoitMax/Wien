@@ -117,6 +117,63 @@ async function loadStops(url) {
 loadStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKHTSVSLOGD&srsName=EPSG:4326&outputFormat=json");
 
 
+async function loadHotels(url) {
+    let response = await fetch(url);
+    let geojson = await response.json(); 
+    console.log(geojson);
+    let overlay = L.featureGroup();
+    layerControl.addOverlay(overlay,"Hotels");
+    overlay.addTo(map)
+    L.geoJSON(geojson, {
+        pointToLayer: function(geoJsonPoint,latlng){
+            console.log(geoJsonPoint.properties.NAME);
+            let popup = `
+                
+                <strong>${geoJsonPoint.properties.BETRIEB}</strong>
+                <hr>
+                Betriebsart: ${geoJsonPoint.properties.BETRIEBSART_TXT}<br>
+                Kategorie: ${geoJsonPoint.properties.KATEGORIE_TXT}<br>
+                Tel.-Nr. ${geoJsonPoint.properties.KONTAKT_TEL}<br>
+                Adresse: ${geoJsonPoint.properties.ADRESSE}<br>
+                <a href="${geoJsonPoint.properties.WEBLINK1}
+                ">Weblink</a><br>
+                <a href="mailto:${geoJsonPoint.properties.KONTAKT_EMAIL}
+                ">E-Mail</a>
+            `;
+            if (geoJsonPoint.properties.BETRIEBSART == "H") {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "icons/hotel_0star.png",
+                        iconAnchor: [16,37],
+                        popupAnchor: [0,-37]
+                    })
+                }).bindPopup(popup);
+            } else if (geoJsonPoint.properties.BETRIEBSART == "P") {
+                return L.marker(latlng, {
+                    icon: L.icon({ 
+                        iconUrl: "icons/lodging_0star.png",
+                        iconAnchor: [16,37],
+                        popupAnchor: [0,-37]
+                    })
+                }).bindPopup(popup);
+            } else {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "icons/apartment-2.png",
+                        iconAnchor: [16,37],
+                        popupAnchor: [0,-37]
+                    })
+                }).bindPopup(popup);
+            }
+             
+        }
+
+    }).addTo(overlay);
+}
+
+loadHotels("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:UNTERKUNFTOGD&srsName=EPSG:4326&outputFormat=json")
+
+
 async function loadLines(url) {
     let response = await fetch(url);
     let geojson = await response.json(); 
@@ -141,18 +198,5 @@ async function loadZones(url) {
 }
 
 //loadZones("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:FUSSGEHERZONEOGD&srsName=EPSG:4326&outputFormat=json");
-
-
-async function loadHotels(url) {
-    let response = await fetch(url);
-    let geojson = await response.json(); 
-    console.log(geojson);
-    let overlay = L.featureGroup();
-    layerControl.addOverlay(overlay,"Hotels");
-    overlay.addTo(map)
-    L.geoJSON(geojson).addTo(overlay);
-}
-
-loadHotels("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:UNTERKUNFTOGD&srsName=EPSG:4326&outputFormat=json")
 
 
