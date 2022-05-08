@@ -39,6 +39,7 @@ let mrk = L.marker([stephansdom.lat, stephansdom.lng]).addTo(sightLayer);
 
 sightLayer.addTo(map);
 
+
 // Maßstab hinzugefügt
 L.control.scale({
     imperial: false,
@@ -50,6 +51,7 @@ L.control.fullscreen().addTo(map);
 let miniMap = new L.Control.MiniMap(
     L.tileLayer.provider("BasemapAT")
 ).addTo(map);
+
 
 // Sehenswürdigkeiten 
 async function loadSights(url) {
@@ -87,6 +89,7 @@ async function loadSights(url) {
 loadSights("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SEHENSWUERDIGOGD&srsName=EPSG:4326&outputFormat=json");
 
 
+// Haltestellen
 async function loadStops(url) {
     let response = await fetch(url);
     let geojson = await response.json(); 
@@ -117,6 +120,7 @@ async function loadStops(url) {
 loadStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKHTSVSLOGD&srsName=EPSG:4326&outputFormat=json");
 
 
+// Unterkünfte
 async function loadHotels(url) {
     let response = await fetch(url);
     let geojson = await response.json(); 
