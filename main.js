@@ -131,7 +131,7 @@ async function loadHotels(url) {
     });
     layerControl.addOverlay(overlay,"Hotels");
     overlay.addTo(map)
-    L.geoJSON(geojson, {
+    let hotelsLayer = L.geoJSON(geojson, {
         pointToLayer: function(geoJsonPoint,latlng){
             let searchList = document.querySelector("#searchList");
             searchList.innerHTML += `<option value="${geoJsonPoint.properties.BETRIEB}"></option>`;
@@ -181,11 +181,17 @@ async function loadHotels(url) {
         }
 
     }).addTo(overlay);
-    
+
     let form = document.querySelector("#searchForm");
     console.log(form.hotel);
     form.suchen.onclick = function() {
         console.log(form.hotel.value);
+        hotelsLayer.eachLayer(function(marker){
+            console.log(marker.getLatLng())
+            console.log(marker.getPopup())
+            console.log(marker.feature.properties.BETRIEB)
+        })
+
 
     }
 }
